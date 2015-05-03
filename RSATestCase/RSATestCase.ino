@@ -1,31 +1,12 @@
 #include <BigNumber.h>
+const BigNumber one = 1;
+const BigNumber rei = 0;
 
 void setup()
 {
   Serial.begin(9600);  
   BigNumber::begin();
 }
-
-/*BigNumber power(int n, BigNumber x)
-{
-  if(n==0){
-    return 1;
-  }
-  else{
-    BigNumber temp=x*x;
-    if(n%2==1){
-      n = (n-1)/2;
-      Serial.println(n);
-      return power(n,temp)*x;
-    }
-    else{
-      n = n/2;
-      Serial.println(n);
-      return power(n,temp);
-    }
-  }
-}*/
-
 BigNumber enc(BigNumber message,BigNumber e, BigNumber modular)
 {
   BigNumber temp = message.powMod(e,modular);
@@ -57,25 +38,27 @@ BigNumber findd(BigNumber a, BigNumber b)
 {
 	BigNumber b0 = b, t, q;
 	BigNumber x0 = 0, x1 = 1;
-	if (b == 1) return 1;
-	while (a > 1) {
+	if (b == one) return one;
+	while (a > one) {
 	q = a / b;
 	t = b;
         b = a % b;
         a = t;
-		t = x0;
+	t = x0;
         x0 = x1 - q * x0;
         x1 = t;
 	}
-	if (x1 < 0) x1 += b0;
+	if (x1 < rei) x1 += b0;
 	return x1;
 }
 
 void loop()
 {
-  BigNumber p1="61657";
-  BigNumber p2="62011";
+  BigNumber p1="41057";
+  BigNumber p2="51871";
+  //p1 and p2 is prime
   BigNumber modular = p1*p2;
+  // bit-lenght of modular is key lenght
   Serial.print("modular is");
   Serial.println(modular);
   BigNumber one = 1;
@@ -84,13 +67,13 @@ void loop()
   BigNumber d;
   Serial.print("phi is");
   Serial.println(phi);
-  //e=finde(p1-one,p2-one,phi);
-  e = BigNumber("17");
+  e=finde(p1-one,p2-one,phi);
+  //e = BigNumber("17");
   //fix e
   Serial.print("E is");
   Serial.println(e);
-  //d=findd(e, phi);
-  d = BigNumber("3598389233");
+  d=findd(e, phi);
+  //d = BigNumber("3598389233");
   //fix d
   Serial.print("D is");
   Serial.println(d);
@@ -98,8 +81,10 @@ void loop()
   BigNumber encd = enc(msg,e,modular);
   /*enc(message,e,modular)*/
   Serial.println(encd);
+  BigNumber dec = enc(encd,d,modular);
+  Serial.println(dec);
   /*BigNumber dec = power(d,encd);
-  dec%=t2;
-  delay(5000);*/
+  dec%=t2;*/
+  delay(5000);
   Serial.println();
 }
