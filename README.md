@@ -1,20 +1,7 @@
-# Arduino driver for nRF24L01 2.4GHz Wireless Transceiver
-
-Design Goals: This library is designed to be...
-
-* Maximally compliant with the intended operation of the chip
-* Easy for beginners to use
-* Consumed with a public interface that's similiar to other Arduino standard libraries
-* Built against the standard SPI library. 
-
-Please refer to:
-
-* [Documentation Main Page](http://maniacbug.github.com/RF24)
-* [RF24 Class Documentation](http://maniacbug.github.com/RF24/classRF24.html)
-* [Source Code](https://github.com/maniacbug/RF24)
-* [Downloads](https://github.com/maniacbug/RF24/archives/master)
-* [Chip Datasheet](http://www.nordicsemi.com/files/Product/data_sheet/nRF24L01_Product_Specification_v2_0.pdf)
-
-This chip uses the SPI bus, plus two chip control pins.  Remember that pin 10 must still remain an output, or
-the SPI hardware will go into 'slave' mode.
-
+# My-CS402-GitHub
+Temp for my senior-project
+This is my working on implementation RSA cryptography at 32bit key on Arduino.
+And practical use example with nrf24L01 radio network to exchange encrypted data.
+BigNumber Library is Arbitrary precision ported by Nick Gammon 
+(http://forum.arduino.cc/index.php?topic=85692.0) for key and encryped message data type.
+RF24 Library is a driver of nrf24L01 by ManiacBug (https://github.com/maniacbug/RF24)
