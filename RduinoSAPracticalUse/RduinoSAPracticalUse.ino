@@ -230,7 +230,7 @@ void loop(void)
 	{
 		timeout = false;
 		while ( ! radio.available() && ! timeout )
-			if (millis() - started_waiting_at > 5000 )
+			if (millis() - started_waiting_at > 10000 )
 				timeout = true;
 
 		// Describe the results
@@ -266,33 +266,56 @@ void loop(void)
     // if there is data ready
     if ( radio.available() )
     {
-      // Dump the payloads until we've gotten everything
-      //unsigned long got_time;
-      bool done = false;
-      while (!done)
-      {
-        // Fetch the payload, and see if this was the last one.
-        BigNumber got_time;
-        done = radio.read( &got_time, sizeof(oneone) );
-
-        // Spew it
-        Serial.print("Got payload ");
-        Serial.print(got_time);
-        Serial.println("...");
-
-        // Delay just a little bit to let the other unit
-        // make the transition to receiver
-        delay(20);
-      }
-
-      // First, stop listening so we can talk
-      radio.stopListening();
-
-      // Send the final one back.
-      radio.write( &reirei, sizeof(reirei) );
-      Serial.println("Sent response.\n\r");
-
-      // Now, resume listening so we catch the next packets.
+		if(e==reirei&&mod==reirei)
+		{
+			bool done = false;
+			while(!done)
+			{
+				done = radio.read(&e, sizeof(e));
+				Serial.print("Got e value = ");
+				Serial.println(e);
+				delay(20);
+			}
+			radio.stopListening();
+			int ack = 1;
+			radio.write(&ack, sizeof(ack));
+			Serial.println("Sent response.");
+			bool done2 = false;
+			radio.startListening();
+			while(!done2)
+			{
+				done2 = radio.read(&mod, sizeof(mod));
+				Serial.print("Got modular value = ");
+				Serial.println(mod);
+				delay(20);
+			}
+			radio.stopListening();
+			Serial.println("Sent response.");
+		}
+		if(e>reirei&&mod>reirei&&plainMessage==0)
+		{
+			Serial.println("Please input message to encrypted");
+			plainMessage = Serial.parseInt();
+			encryptedMessage = rsa.encrypt(plainMessage,e,mod);
+		}
+		if(encryptedMessage>0)
+		{
+			Serial.print("Now sending encrypted message = ");
+			Serial.println(encryptedMessage);
+			bool ok4 = radio.write(&encryptedMessage, sizeof(encryptedMessage));
+			if (ok4)
+				Serial.println("ok...");
+			else
+				Serial.println("failed.\n\r");
+			//radio.startListening();
+			/*started_waiting_at = millis();
+			timeout = false;
+			while(!radio.available()&&!timeout)
+				if(millis() - started_waiting_at > 200 )
+					timeout = true;*/
+			encryptedMessage = 0;	
+		}
+     
       radio.startListening();
     }
   }
