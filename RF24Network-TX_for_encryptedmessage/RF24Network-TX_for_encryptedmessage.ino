@@ -44,13 +44,15 @@ BigNumber message = 256;
 // fixed public key for testing
 BigNumber e = 11;
 BigNumber mod = "1143724697";
-BigNumber encryptedMessage;
+//BigNumber encryptedMessageX;
+//BigNumber encryptedMessageY;
 unsigned long sendmessage;
 // Structure of our payload
-/*struct payload_t
+struct payload_t
 {
-  BigNumber encryptedMessage;
-};*/
+  unsigned long encryptedX;
+  unsigned long encryptedY;
+};
 
 void setup(void)
 {
@@ -75,12 +77,19 @@ void loop(void)
     last_sent = now;
 
     Serial.print("Sending...");
-    //payload_t payload;
-    encryptedMessage = rsa.encrypt(message,e,mod);
-    sendmessage = (long)encryptedMessage;
-    Serial.println(sendmessage);
+    payload_t payload;
+    int msgX = analogRead(A1);
+    int msgY = analogRead(A2);
+    BigNumber emsgX = BigNumber(msgX);
+    BigNumber emsgY = BigNumber(msgY);
+    emsgX = rsa.encrypt(emsgX,e,mod);
+    emsgY = rsa.encrypt(emsgY,e,mod);
+    payload.encryptedX = (long)emsgX;
+    payload.encryptedY = (long)emsgY;
+    Serial.println(payload.encryptedX);
+    Serial.println(payload.encryptedY);
     RF24NetworkHeader header(/*to node*/ other_node);
-    bool ok = network.write(header,&sendmessage,6);
+    bool ok = network.write(header,&payload,sizeof(payload));
     if (ok)
       Serial.println("ok.");
     else

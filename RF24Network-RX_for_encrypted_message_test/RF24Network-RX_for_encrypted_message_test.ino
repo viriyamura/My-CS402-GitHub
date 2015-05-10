@@ -33,7 +33,8 @@ const uint16_t other_node = 1;
 // Structure of our payload
 struct payload_t
 {
-  BigNumber encryptedMessage;
+  unsigned long encryptedX;
+  unsigned long encryptedY;
 };
 
 void setup(void)
@@ -56,11 +57,13 @@ void loop(void)
   {
     // If so, grab it and print it out
     RF24NetworkHeader header;
-    //payload_t payload;
-    unsigned long recvmsg;
-    network.read(header,&recvmsg,sizeof(unsigned long));
-    Serial.print("Received packet #");
-    Serial.print(recvmsg);
+    payload_t payload;
+    //unsigned long recvmsg;
+    network.read(header,&payload,sizeof(payload));
+    Serial.print("Received packet encrypted X varlue#");
+    Serial.println(payload.encryptedX);
+    Serial.print("Received packet encrypted Y varlue#");
+    Serial.print(payload.encryptedY);
     //Serial.print(" at ");
     //Serial.println(payload.ms);
   }
