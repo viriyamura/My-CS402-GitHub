@@ -60,7 +60,7 @@ void setup(void)
   // Print preamble
   //
   BigNumber::begin();
-  Serial.begin(9600);
+  Serial.begin(57600);
   //printf_begin();
   Serial.println("\n\rRF24/examples/GettingStarted/\n\r");
   Serial.print("ROLE: ");
@@ -131,9 +131,9 @@ void loop(void)
     Serial.println(plainMessage);
 	Serial.println("Encrypted is");
 	BigNumber tempEncryptedMessage = rsa.encrypt(plainMessage,e,mod);
-	String s = tempEncryptedMessage.toString();
-        Serial.println(s);
-    bool ok = radio.write( &s, sizeof(s) );
+	unsigned long encd = (long)tempEncryptedMessage;
+        Serial.println(encd);
+    bool ok = radio.write( &encd, sizeof(unsigned long) );
     
     if (ok)
       Serial.println("ok...");
@@ -162,9 +162,9 @@ void loop(void)
       radio.read( &got_time, sizeof(unsigned long) );
 
       // Spew it
-      Serial.println("Got response %lu, round-trip delay:");
+      Serial.println("Got response, Decrypted message is:");
       Serial.print(got_time);
-      Serial.print(" ");
+      Serial.println(" ");
       Serial.println(millis()-got_time);
     }
 
@@ -184,30 +184,35 @@ void loop(void)
       // Dump the payloads until we've gotten everything
       unsigned long got_time;
       bool done = false;
+      unsigned long encd2;
       while (!done)
       {
         // Fetch the payload, and see if this was the last one.
-        String t = tempsize.toString();  
-        String r;
-        done = radio.read( &r,sizeof(t) );
+        //String t = tempsize.toString();  
+        //String r;
+        done = radio.read( &encd2,sizeof(unsigned long) );
 
         // Spew it
         Serial.print("Got payload ");
-        Serial.print(r);
+        Serial.print(encd2);
 		//BigNumber tempMessage = rsa.decrypt(encryptedMessage,d,mod);
+        encryptedMessage = rsa.tobignum(encd2);
+        encryptedMessage = rsa.decrypt(encryptedMessage,d,mod);
         Serial.println("...");
-		got_time = millis();
-
+		//got_time = millis();
+        Serial.print("Decrypted message is ");
+        Serial.println(encryptedMessage);
         // Delay just a little bit to let the other unit
         // make the transition to receiver
         delay(20);
+        encd2 = (long)encryptedMessage;
       }
 
       // First, stop listening so we can talk
       radio.stopListening();
 
       // Send the final one back.
-      radio.write( &got_time, sizeof(unsigned long) );
+      radio.write( &encd2, sizeof(unsigned long) );
       Serial.println("Sent response.\n\r");
 
       // Now, resume listening so we catch the next packets.
@@ -241,5 +246,6 @@ void loop(void)
       radio.openReadingPipe(1,pipes[0]);
     }
   }
+  delay(5000);
 }
 // vim:cin:ai:sts=2 sw=2 ft=cpp
