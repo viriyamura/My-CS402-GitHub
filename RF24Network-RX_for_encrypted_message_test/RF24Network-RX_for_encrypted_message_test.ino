@@ -1,6 +1,5 @@
 /*
  Copyright (C) 2012 James Coliz, Jr. <maniacbug@ymail.com>
-
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  version 2 as published by the Free Software Foundation.
@@ -19,8 +18,8 @@
 #include <RduinoSA.h>
 
 // nRF24L01(+) radio attached using Getting Started board 
-RF24 radio(9,10);
-
+// for mega RF24 radio(53,48);
+RF24 radio(9,10); // for uno
 // Network uses that radio
 RF24Network network(radio);
 
@@ -36,7 +35,10 @@ struct payload_t
   unsigned long encryptedX;
   unsigned long encryptedY;
 };
-
+//BigNumber temp1;
+//BigNumber temp2;
+//BigNumber d = "311906471";
+//BigNumber mod = "1143724697";
 void setup(void)
 {
   Serial.begin(57600);
@@ -62,8 +64,15 @@ void loop(void)
     network.read(header,&payload,sizeof(payload));
     Serial.print("Received packet encrypted X varlue#");
     Serial.println(payload.encryptedX);
+    //temp1 = rsa.tobignum(payload.encryptedX);
+    //Serial.println(temp1);
+    //BigNumber tempX = rsa.decrypt(temp1,d,mod);
+    //Serial.println(tempX);
     Serial.print("Received packet encrypted Y varlue#");
-    Serial.print(payload.encryptedY);
+    Serial.println(payload.encryptedY);
+    //temp2 = rsa.tobignum(payload.encryptedY);
+    //temp2 = rsa.decrypt(temp2,d,mod);
+    //Serial.println(temp1);
     //Serial.print(" at ");
     //Serial.println(payload.ms);
   }
