@@ -23,6 +23,17 @@ class RduinoSA
 		/* generate e value that use in public key set */
 		BigNumber gcdr(BigNumber a, BigNumber b);
 		/* gcd function, use in e generating */	
+		BigNumber add0(BigNumber old);
+		/* part of long to bignum converting*/
+		BigNumber addbot(int bot);
+		/* part of long to bignum converting*/
+		BigNumber addmid(int mid, int bot);
+		/* part of long to bignum converting*/
+		BigNumber addtop(int top, int mid, int bot);
+		/* part of long to bignum converting*/
+		BigNumber tobignum(unsigned long data);
+		/*convert BigNumber to long data type*/
+		
   private:
 };
 extern RduinoSA rsa;

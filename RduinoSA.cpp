@@ -52,6 +52,7 @@ BigNumber RduinoSA::dGenerate(BigNumber a, BigNumber b)
 	t = x0;
         x0 = x1 - q * x0;
         x1 = t;
+		Serial.println(a);
 	}
 	if (x1 < rei) x1 += b0;
 	return x1;
@@ -61,6 +62,8 @@ BigNumber RduinoSA::eGenerate(BigNumber a, BigNumber b, BigNumber bound)
 {
 	BigNumber x, y, z;
     BigNumber g = 2;
+	a = a-one;
+	b = b-one;
     for(z=17;x!=1||y!=1;z+=2){
             x=rsa.gcdr(a,z);
             y=rsa.gcdr(b,z);
@@ -74,8 +77,50 @@ BigNumber RduinoSA::gcdr(BigNumber a, BigNumber b) //www.math.wustl.edu/~victor/
   return gcdr(b%a,a);
 }
 
+BigNumber RduinoSA::add0(BigNumber old){
+  return old*=1000;
+}
 
+BigNumber RduinoSA::addbot(int bot){
+  BigNumber result=bot;
+  return result;
+}
 
+BigNumber RduinoSA::addmid(int mid, int bot){
+  BigNumber result=mid;
+  result = add0(result);
+  result += addbot(bot);
+  return result;
+}
+
+BigNumber RduinoSA::addtop(int top, int mid, int bot){
+  BigNumber result=top;
+  result = add0(result);
+  result = add0(result);
+  result += addmid(mid, bot);
+  return result;
+}
+
+BigNumber RduinoSA::tobignum(unsigned long data){
+  BigNumber ans;
+  if(data>999999){
+    int bot = data%1000;
+    int mid = (data/1000)%1000;
+    int top = data/1000000;
+    //Serial.println(top);
+    ans = addtop(top, mid, bot);
+  }
+  else if(data>999){
+    int bot = data%1000;
+    int mid = data/1000;
+    ans = addmid(mid, bot);
+  }
+  else{
+    int bot = data;
+    ans = addbot(bot);
+  }
+  return ans;
+}
 
 
 
