@@ -71,10 +71,15 @@ BigNumber RduinoSA::eGenerate(BigNumber a, BigNumber b, BigNumber bound)
     return z-g;
 }
 
-BigNumber RduinoSA::gcdr(BigNumber a, BigNumber b) //www.math.wustl.edu/~victor/mfmm/compaa/gcd.c
+BigNumber RduinoSA::gcdr(BigNumber a, BigNumber b)
 {
-  if(a==rei) return b;
-  return gcdr(b%a,a);
+  BigNumber c;
+  while(a!=rei){
+  	c = a; 
+	a = b%a; 
+	b=c;
+  }
+  return b;
 }
 
 BigNumber RduinoSA::add0(BigNumber old){
