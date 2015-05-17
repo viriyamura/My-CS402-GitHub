@@ -35,10 +35,10 @@ struct payload_t
   unsigned long encryptedX;
   unsigned long encryptedY;
 };
-//BigNumber temp1;
-//BigNumber temp2;
-//BigNumber d = "311906471";
-//BigNumber mod = "1143724697";
+BigNumber temp1;
+BigNumber temp2;
+BigNumber d = "311906471";
+BigNumber mod = "1143724697";
 void setup(void)
 {
   Serial.begin(57600);
@@ -47,6 +47,7 @@ void setup(void)
   SPI.begin();
   radio.begin();
   network.begin(/*channel*/ 90, /*node address*/ this_node);
+  BigNumber::begin();
 }
 
 void loop(void)
@@ -64,15 +65,15 @@ void loop(void)
     network.read(header,&payload,sizeof(payload));
     Serial.print("Received packet encrypted X varlue#");
     Serial.println(payload.encryptedX);
-    //temp1 = rsa.tobignum(payload.encryptedX);
-    //Serial.println(temp1);
-    //BigNumber tempX = rsa.decrypt(temp1,d,mod);
-    //Serial.println(tempX);
+    temp1 = rsa.tobignum(payload.encryptedX);
+    Serial.println(temp1);
+    temp1 = rsa.decrypt(temp1,d,mod);
+    Serial.println(temp1);
     Serial.print("Received packet encrypted Y varlue#");
     Serial.println(payload.encryptedY);
-    //temp2 = rsa.tobignum(payload.encryptedY);
-    //temp2 = rsa.decrypt(temp2,d,mod);
-    //Serial.println(temp1);
+    temp2 = rsa.tobignum(payload.encryptedY);
+    temp2 = rsa.decrypt(temp2,d,mod);
+    Serial.println(temp2);
     //Serial.print(" at ");
     //Serial.println(payload.ms);
   }
