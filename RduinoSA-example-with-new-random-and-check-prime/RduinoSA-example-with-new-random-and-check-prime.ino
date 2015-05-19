@@ -5,61 +5,28 @@ void setup() {
   BigNumber::begin();
 }
 
-boolean isPrime(unsigned int x){
-  unsigned long sqrtx = sqrt(x);
-  for(int i=2;i<=sqrtx;i++){
-    if(x%i==0){
-      return true;
-    }
-  }
-  return false;
-}
-
-unsigned int gcd (unsigned int a, unsigned int b )
-{
-  unsigned int c;
-  while ( a != 0 ) {
-     c = a; a = b%a;  b = c;
-  }
-  return b;
-}
-
 void loop() {
-  unsigned int p;
-  unsigned int q;
-  boolean check = true;
-  unsigned long start=millis();
-  while(check){
-    p = random(10000,65535);
-    if(p%2==0){
-      p++;
-    }
-    check=isPrime(p);
-  }
-  check = true;
-  for(int i = 10 ; check ; i+=10){
-    q = random(p-i,p+i);
-    if(q%2==0){
-      q++;
-    }
-    if(p!=q){
-      check=isPrime(q);
-    }
-  }
-  unsigned long time = millis()-start;
-  Serial.print("p=");
+  
+  unsigned long start = millis();
+  //unsigned long p = rsa.createPrime(0);
+  unsigned long endtime = millis()-start;
+  Serial.println(endtime);
+  start = millis();
+  //unsigned long q = rsa.createPrime(1);
+  endtime = millis()-start;
+  //Serial.println(endtime);
+  //unsigned long p = 100000003757;
+  //unsigned long q = 100000001389;
+  /*Serial.print("p=");
   Serial.println(p);
   Serial.print("q=");
   Serial.println(q);
-  Serial.print("time=");
-  Serial.println(time);
-  unsigned int x = gcd(p-1,q-1);
-  Serial.print("gcd=");
-  Serial.println(x);
-  Serial.println("------------");
-  BigNumber firstprime = rsa.tobignum((unsigned long)p);
+  Serial.println("------------");*/
+ // BigNumber firstprime = rsa.tobignum(p);
+  BigNumber firstprime = "100000033417";
   Serial.println(firstprime);
-  BigNumber secondprime = rsa.tobignum((unsigned long)q);
+  BigNumber secondprime = "100000034467";
+  //BigNumber secondprime = rsa.tobignum(q);
   Serial.println(secondprime);
   BigNumber phi = rsa.phiGenerate(firstprime,secondprime);
   Serial.println(phi);
@@ -79,9 +46,13 @@ void loop() {
   Serial.print(" Encrypted message is ");
   BigNumber encd = rsa.encrypt(msg,e,modular);
   Serial.println(encd);
+  Serial.print("Size of message is ");
+  Serial.println(sizeof(encd));
   Serial.print(" Decrypted message is ");
   BigNumber dec = rsa.decrypt(encd,d,modular);
   Serial.println(dec);
- 
+  BigNumber newBN = "10";
+  Serial.println(sizeof(newBN));
+  Serial.println(newBN);
   delay(5000);
 }
