@@ -52,7 +52,7 @@ BigNumber RduinoSA::dGenerate(BigNumber a, BigNumber b)
 	t = x0;
         x0 = x1 - q * x0;
         x1 = t;
-		Serial.println(a);
+		//Serial.println(a);
 	}
 	if (x1 < rei) x1 += b0;
 	return x1;
@@ -125,6 +125,28 @@ BigNumber RduinoSA::tobignum(unsigned long data){
     ans = addbot(bot);
   }
   return ans;
+}
+boolean RduinoSA::isPrime(unsigned int x){
+	unsigned long sqrtx = sqrt(x);
+	for(int i=3;i<=sqrtx;i+=2){
+		if(x%i==0){
+			return false;
+		}
+	}
+	return true;
+}
+unsigned long RduinoSA::createPrime(int a){
+	randomSeed(analogRead(a));
+	unsigned long resultPrime;
+	boolean check = false;
+	while(!check){
+		resultPrime = random(10000,65535);
+		if(resultPrime%2==0){
+			resultPrime++;
+		}
+		check = rsa.isPrime(resultPrime);
+	}
+	return resultPrime;
 }
 
 

@@ -33,7 +33,10 @@ class RduinoSA
 		/* part of long to bignum converting*/
 		BigNumber tobignum(unsigned long data);
 		/*convert BigNumber to long data type*/
-		
+		boolean isPrime(unsigned int x);
+		/*prime checking function*/
+		unsigned long createPrime(int a);
+		/*prime random*/
   private:
 };
 extern RduinoSA rsa;
