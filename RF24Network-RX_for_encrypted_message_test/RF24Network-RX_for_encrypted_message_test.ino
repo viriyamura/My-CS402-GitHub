@@ -37,8 +37,8 @@ struct payload_t
 };
 BigNumber temp1;
 BigNumber temp2;
-BigNumber d = "311906471";
-BigNumber mod = "1143724697";
+BigNumber d = "352089617";
+BigNumber mod = "1467573221";
 void setup(void)
 {
   Serial.begin(57600);
@@ -66,13 +66,14 @@ void loop(void)
     Serial.print("Received packet encrypted X varlue#");
     Serial.println(payload.encryptedX);
     temp1 = rsa.tobignum(payload.encryptedX);
-    Serial.println(temp1);
     temp1 = rsa.decrypt(temp1,d,mod);
+    Serial.print("Decrypted message for X is");
     Serial.println(temp1);
     Serial.print("Received packet encrypted Y varlue#");
     Serial.println(payload.encryptedY);
     temp2 = rsa.tobignum(payload.encryptedY);
     temp2 = rsa.decrypt(temp2,d,mod);
+    Serial.print("Decrypted message for Y is");
     Serial.println(temp2);
     //Serial.print(" at ");
     //Serial.println(payload.ms);
