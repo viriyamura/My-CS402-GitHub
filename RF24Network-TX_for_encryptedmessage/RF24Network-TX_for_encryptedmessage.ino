@@ -40,10 +40,10 @@ unsigned long last_sent;
 unsigned long packets_sent;
 
 // fixed message for testing
-BigNumber message = 256;
+//BigNumber message = 256;
 // fixed public key for testing
-BigNumber e = 11;
-BigNumber mod = "1143724697";
+BigNumber e = "65537";
+BigNumber mod = "1467573221";
 //BigNumber encryptedMessageX;
 //BigNumber encryptedMessageY;
 unsigned long sendmessage;
@@ -87,7 +87,9 @@ void loop(void)
     payload.encryptedX = (long)emsgX;
     payload.encryptedY = (long)emsgY;
     Serial.println(payload.encryptedX);
+    Serial.println(msgX);
     Serial.println(payload.encryptedY);
+    Serial.println(msgY);
     RF24NetworkHeader header(/*to node*/ other_node);
     bool ok = network.write(header,&payload,sizeof(payload));
     if (ok)
